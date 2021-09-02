@@ -1,7 +1,7 @@
 namespace SpriteKind {
     export const Crate = SpriteKind.create()
 }
-function reset_states () {
+function reset_states() {
     pressed_up = 0
     pressed_down = 0
     pressed_left = 0
@@ -16,7 +16,10 @@ function reset_states () {
     tiles.destroySpritesOfKind(SpriteKind.Text)
     scene.centerCameraAt(80, 60)
 }
-function set_up_selection () {
+controller.A.onEvent(ControllerButtonEvent.Released, function () {
+    pressed_A = 0
+})
+function set_up_selection() {
     state_level = 0
     button_lag = 6
     menu_selection = 1
@@ -48,7 +51,7 @@ function set_up_selection () {
     state_selection = 1
     reset_buttons()
 }
-function set_up_level () {
+function set_up_level() {
     reset_states()
     state_selection = 0
     blockSettings.writeNumber("recent group", levelset)
@@ -59,7 +62,13 @@ function set_up_level () {
     return_to_level()
     introduce_level()
 }
-function reset_buttons () {
+controller.down.onEvent(ControllerButtonEvent.Released, function () {
+    pressed_down = 0
+})
+controller.up.onEvent(ControllerButtonEvent.Released, function () {
+    pressed_up = 0
+})
+function reset_buttons() {
     pressed_up = button_lag
     pressed_down = button_lag
     pressed_left = button_lag
@@ -67,7 +76,7 @@ function reset_buttons () {
     pressed_A = button_lag
     pressed_B = button_lag
 }
-function get_level_asset_cantrip (lv: number) {
+function get_level_asset_cantrip(lv: number) {
     if (lv == 1) {
         return assets.image`level cantrip 01`
     } else if (lv == 2) {
@@ -111,31 +120,31 @@ function get_level_asset_cantrip (lv: number) {
     }
     return assets.image`level cantrip 01`
 }
-function get_level_asset_declercq (lv: number) {
+function get_level_asset_declercq(lv: number) {
     return [
-    assets.image`level blocks 01`,
-    assets.image`level blocks 02`,
-    assets.image`level blocks 03`,
-    assets.image`level blocks 04`,
-    assets.image`level blocks 05`,
-    assets.image`level blocks 06`,
-    assets.image`level blocks 07`,
-    assets.image`level blocks 08`,
-    assets.image`level blocks 09`,
-    assets.image`level blocks 10`,
-    assets.image`level various 01`,
-    assets.image`level various 02`,
-    assets.image`level various 03`,
-    assets.image`level various 04`,
-    assets.image`level various 05`,
-    assets.image`level various 06`,
-    assets.image`level various 07`,
-    assets.image`level various 08`,
-    assets.image`level various 09`,
-    assets.image`level various 10`
+        assets.image`level blocks 01`,
+        assets.image`level blocks 02`,
+        assets.image`level blocks 03`,
+        assets.image`level blocks 04`,
+        assets.image`level blocks 05`,
+        assets.image`level blocks 06`,
+        assets.image`level blocks 07`,
+        assets.image`level blocks 08`,
+        assets.image`level blocks 09`,
+        assets.image`level blocks 10`,
+        assets.image`level various 01`,
+        assets.image`level various 02`,
+        assets.image`level various 03`,
+        assets.image`level various 04`,
+        assets.image`level various 05`,
+        assets.image`level various 06`,
+        assets.image`level various 07`,
+        assets.image`level various 08`,
+        assets.image`level various 09`,
+        assets.image`level various 10`
     ][lv - 1]
 }
-function add_menu_item (y: number, text: string, changeable: boolean) {
+function add_menu_item(y: number, text: string, changeable: boolean) {
     t = textsprite.create(" ", 0, 6)
     t.setMaxFontHeight(8)
     t.setPosition(24, y)
@@ -146,7 +155,7 @@ function add_menu_item (y: number, text: string, changeable: boolean) {
     t.setText(text)
     menu_items[menu_items.length] = t
 }
-function get_level_asset_petitesse (lv: number) {
+function get_level_asset_petitesse(lv: number) {
     if (lv == 1) {
         return assets.image`level petitesse 01`
     } else if (lv == 2) {
@@ -186,43 +195,103 @@ function get_level_asset_petitesse (lv: number) {
     }
     return assets.image`level petitesse 01`
 }
-function update_moves () {
+function update_moves() {
     update_camera()
     text_moves.setText("" + convertToText(count_moves) + "/" + convertToText(count_pushes))
     text_moves.setPosition(scene.cameraProperty(CameraProperty.X) + 81 - text_moves.width / 2, scene.cameraProperty(CameraProperty.Y) - 55)
 }
-function set_level_skin (random: boolean) {
+function set_level_skin(random: boolean) {
     level_skin = levelset
     if (random) {
         level_skin = randint(1, 9)
     }
     if (level_skin == 1) {
-        list_skin_sprites = [assets.image`wall purple bricks`, assets.image`crate wood`, assets.image`crate wood on target`, assets.image`floor dark purple`, assets.image`target dark purple`]
+        list_skin_sprites = [
+            assets.image`wall purple bricks`,
+            assets.image`crate wood`,
+            assets.image`crate wood on target`,
+            assets.image`floor dark purple`,
+            assets.image`target dark purple`
+        ]
     } else if (level_skin == 2) {
-        list_skin_sprites = [assets.image`wall steel`, assets.image`crate wood2`, assets.image`crate wood2 on target`, assets.image`floor tan dotted`, assets.image`target tan dotted`]
+        list_skin_sprites = [
+            assets.image`wall steel`,
+            assets.image`crate wood2`,
+            assets.image`crate wood2 on target`,
+            assets.image`floor tan dotted`,
+            assets.image`target tan dotted`
+        ]
     } else if (level_skin == 3) {
-        list_skin_sprites = [assets.image`wall dark brown bricks`, assets.image`crate drawer`, assets.image`crate drawer on target`, assets.image`floor tan dotted`, assets.image`target tan dotted`]
+        list_skin_sprites = [
+            assets.image`wall dark brown bricks`,
+            assets.image`crate drawer`,
+            assets.image`crate drawer on target`,
+            assets.image`floor tan dotted`,
+            assets.image`target tan dotted`
+        ]
     } else if (level_skin == 4) {
-        list_skin_sprites = [assets.image`wall dark purple bricks`, assets.image`crate wood2`, assets.image`crate wood2 on target`, assets.image`floor tan dotted`, assets.image`target tan dotted`]
+        list_skin_sprites = [
+            assets.image`wall dark purple bricks`,
+            assets.image`crate wood2`,
+            assets.image`crate wood2 on target`,
+            assets.image`floor tan dotted`,
+            assets.image`target tan dotted`
+        ]
     } else if (level_skin == 5) {
-        list_skin_sprites = [assets.image`wall steel`, assets.image`crate wood2`, assets.image`crate wood2 on target`, assets.image`floor tan dotted`, assets.image`target tan dotted`]
+        list_skin_sprites = [
+            assets.image`wall steel`,
+            assets.image`crate wood2`,
+            assets.image`crate wood2 on target`,
+            assets.image`floor tan dotted`,
+            assets.image`target tan dotted`
+        ]
     } else if (level_skin == 6) {
-        list_skin_sprites = [assets.image`wall dark steel`, assets.image`crate chest`, assets.image`crate chest on target`, assets.image`floor light purple dotted`, assets.image`target light purple dotted`]
+        list_skin_sprites = [
+            assets.image`wall dark steel`,
+            assets.image`crate chest`,
+            assets.image`crate chest on target`,
+            assets.image`floor light purple dotted`,
+            assets.image`target light purple dotted`
+        ]
     } else if (level_skin == 7) {
-        list_skin_sprites = [assets.image`wall steel`, assets.image`crate wood`, assets.image`crate wood on target`, assets.image`floor tan dotted`, assets.image`target tan dotted`]
+        list_skin_sprites = [
+            assets.image`wall steel`,
+            assets.image`crate wood`,
+            assets.image`crate wood on target`,
+            assets.image`floor tan dotted`,
+            assets.image`target tan dotted`
+        ]
     } else if (level_skin == 8) {
-        list_skin_sprites = [assets.image`wall dark brown bricks`, assets.image`crate drawer`, assets.image`crate drawer on target`, assets.image`floor tan dotted`, assets.image`target tan dotted`]
+        list_skin_sprites = [
+            assets.image`wall dark brown bricks`,
+            assets.image`crate drawer`,
+            assets.image`crate drawer on target`,
+            assets.image`floor tan dotted`,
+            assets.image`target tan dotted`
+        ]
     } else if (level_skin == 9) {
-        list_skin_sprites = [assets.image`wall teal bricks`, assets.image`crate wood`, assets.image`crate wood on target`, assets.image`floor tan dotted`, assets.image`target tan dotted`]
+        list_skin_sprites = [
+            assets.image`wall teal bricks`,
+            assets.image`crate wood`,
+            assets.image`crate wood on target`,
+            assets.image`floor tan dotted`,
+            assets.image`target tan dotted`
+        ]
     } else {
-        list_skin_sprites = [assets.image`wall steel`, assets.image`crate wood`, assets.image`crate wood on target`, assets.image`floor tan dotted`, assets.image`target tan dotted`]
+        list_skin_sprites = [
+            assets.image`wall steel`,
+            assets.image`crate wood`,
+            assets.image`crate wood on target`,
+            assets.image`floor tan dotted`,
+            assets.image`target tan dotted`
+        ]
     }
 }
-function level_best_id (group: number, level: number) {
+function level_best_id(group: number, level: number) {
     return "best-" + convertToText(group) + "-" + convertToText(level)
 }
-function scale_thumbnail (src: Image) {
-    thumbnail = image.create(45, 36)
+function scale_thumbnail(src: Image) {
+    thumbnail = image.create(45, 0)
     for (let x = 0; x <= 14; x++) {
         for (let y = 0; y <= 11; y++) {
             thumbnail.fillRect(x * 3, y * 3, 3, 3, src.getPixel(x, y))
@@ -234,25 +303,22 @@ function scale_thumbnail (src: Image) {
     thumbnail.drawLine(44, 0, 44, 35, 6)
     return thumbnail
 }
-function show_help () {
+function show_help() {
     game.showLongText("---  Soko-Chan Help  --- " + "                         " + "Push the crates onto " + "the targets. You win " + "when all targets are " + "occupied by crates." + "              " + "                         " + "-  Arrow keys - Move      " + "-  B button   - Undo      " + "-  A button   - Menu      ", DialogLayout.Full)
     game.showLongText("---  Soko-Chan Help  --- " + "                         " + "When in menu, press A immediately to " + "reset the current level, or choose a different level, then press A." + "                                        " + "When in menu, press B to " + "return to the level as you left it.", DialogLayout.Full)
 }
-controller.down.onEvent(ControllerButtonEvent.Released, function () {
-    pressed_down = 0
-})
-function get_level_asset_takaken (lv: number) {
+function get_level_asset_takaken(lv: number) {
     return [
-    assets.image`level takaken 1`,
-    assets.image`level takaken 2`,
-    assets.image`level takaken 3`,
-    assets.image`level takaken 4`,
-    assets.image`level takaken 5`,
-    assets.image`level takaken 6`,
-    assets.image`level takaken 7`
+        assets.image`level takaken 1`,
+        assets.image`level takaken 2`,
+        assets.image`level takaken 3`,
+        assets.image`level takaken 4`,
+        assets.image`level takaken 5`,
+        assets.image`level takaken 6`,
+        assets.image`level takaken 7`
     ][lv - 1]
 }
-function get_level_asset_microcosmos (lv: number) {
+function get_level_asset_microcosmos(lv: number) {
     if (lv == 1) {
         return assets.image`level microcosmos 01`
     } else if (lv == 2) {
@@ -336,18 +402,18 @@ function get_level_asset_microcosmos (lv: number) {
     }
     return assets.image`level microcosmos 01`
 }
-function move_to (tx: number, ty: number, push_tx: number, push_ty: number) {
+function move_to(tx: number, ty: number, push_tx: number, push_ty: number) {
     if (!(tiles.tileIsWall(tiles.getTileLocation(tx, ty)))) {
         if (box_on_tile(tx, ty)) {
             if (!(tiles.tileIsWall(tiles.getTileLocation(push_tx, push_ty)))) {
                 if (!(box_on_tile(push_tx, push_ty))) {
                     undo.push([
-                    tiles.locationXY(tiles.locationOfSprite(ban), tiles.XY.column),
-                    tiles.locationXY(tiles.locationOfSprite(ban), tiles.XY.row),
-                    tx,
-                    ty,
-                    push_tx,
-                    push_ty
+                        tiles.locationXY(tiles.locationOfSprite(ban), tiles.XY.column),
+                        tiles.locationXY(tiles.locationOfSprite(ban), tiles.XY.row),
+                        tx,
+                        ty,
+                        push_tx,
+                        push_ty
                     ])
                     move_box(tx, ty, push_tx, push_ty)
                     move_ban(tx, ty)
@@ -364,16 +430,18 @@ function move_to (tx: number, ty: number, push_tx: number, push_ty: number) {
         update_moves()
     }
 }
-function ask_for_next_level () {
+function ask_for_next_level() {
     str_record = "New best solution."
     str_score_action = ""
-    if (blockSettings.exists(level_best_id(levelset, level))) {
+    let readSettings = blockSettings.readNumberArray(level_best_id(levelset, level))
+
+    if (readSettings != undefined) {
         record = blockSettings.readNumberArray(level_best_id(levelset, level))
         str_record = "Your best:    " + record[0] + "/" + record[1] + game.isSokobanRecord(
-        levelset,
-        level - 1,
-        record[0],
-        record[1]
+            levelset,
+            level - 1,
+            record[0],
+            record[1]
         )
         if (count_moves < record[0] || record[0] == 0) {
             str_score_action = "New best! "
@@ -383,13 +451,13 @@ function ask_for_next_level () {
         blockSettings.writeNumberArray(level_best_id(levelset, level), [count_moves, count_pushes])
     }
     return game.askNextLevel("Moves/Pushes: " + count_moves + "/" + count_pushes + game.isSokobanRecord(
-    levelset,
-    level - 1,
-    count_moves,
-    count_pushes
+        levelset,
+        level - 1,
+        count_moves,
+        count_pushes
     ), str_record, str_score_action)
 }
-function hilight_menu_item () {
+function hilight_menu_item() {
     for (let t = 0; t <= 3; t++) {
         if (t == menu_selection) {
             menu_items[t].setBorder(1, 9, 2)
@@ -405,34 +473,32 @@ function hilight_menu_item () {
  * 
  * x, y are pixel screen coordinates
  */
-function walk (dtx: number, dty: number) {
+function walk(dtx: number, dty: number) {
     move_to(tiles.locationXY(tiles.locationOfSprite(ban), tiles.XY.column) + dtx, tiles.locationXY(tiles.locationOfSprite(ban), tiles.XY.row) + dty, tiles.locationXY(tiles.locationOfSprite(ban), tiles.XY.column) + 2 * dtx, tiles.locationXY(tiles.locationOfSprite(ban), tiles.XY.row) + 2 * dty)
 }
-function draw_selection () {
+function draw_selection() {
     menu_items[0].setText("Group: " + list_levelsets[select_levelset])
     menu_items[1].setText("Level: " + convertToText(select_level))
-    if (blockSettings.exists(level_best_id(select_levelset, select_level)) && blockSettings.readNumberArray(level_best_id(select_levelset, select_level))[0] > 0) {
+    let readSettings = blockSettings.readNumberArray(level_best_id(levelset, level))
+    if (readSettings != undefined && blockSettings.readNumberArray(level_best_id(select_levelset, select_level))[0] > 0) {
         text_best.setText("" + blockSettings.readNumberArray(level_best_id(select_levelset, select_level))[0] + "/" + blockSettings.readNumberArray(level_best_id(select_levelset, select_level))[1] + game.isSokobanRecord(
-        select_levelset,
-        select_level - 1,
-        blockSettings.readNumberArray(level_best_id(select_levelset, select_level))[0],
-        blockSettings.readNumberArray(level_best_id(select_levelset, select_level))[1]
+            select_levelset,
+            select_level - 1,
+            blockSettings.readNumberArray(level_best_id(select_levelset, select_level))[0],
+            blockSettings.readNumberArray(level_best_id(select_levelset, select_level))[1]
         ))
     } else {
         text_best.setText("")
     }
     minimap.setImage(scale_thumbnail(get_level_asset(select_levelset, select_level)))
 }
-controller.right.onEvent(ControllerButtonEvent.Released, function () {
-    pressed_right = 0
-})
-controller.left.onEvent(ControllerButtonEvent.Released, function () {
-    pressed_left = 0
-})
-function show_credits () {
+function show_credits() {
     game.showLongText("---  Level  Credits  --- " + "                         " + "Tutorial                 " + ":   by Moobot            " + "Microban (easy)          " + ":   by David Skinner     " + "Blocks+co (easy/tricky)  " + ":   by Dries de Clercq   " + "Microcosmos (tricky)     " + ":   by Aymeric du Peloux " + "Cantrip (tricky/hard)    " + ":   by David Holland", DialogLayout.Full)
     game.showLongText("---  Level  Credits  --- " + "                         " + "Takaken (hard)           " + ": by Kenichiro Takahashi " + "Sokogen (easy)           " + ": genr.by Jacques Duthen " + "Murase (tricky)          " + ": gener.by Yoshio Murase " + "Nabokosmos (hard)        " + ":   by Aymeric du Peloux " + "Petitesse (tricky)       " + ":   by niwa", DialogLayout.Full)
 }
+controller.left.onEvent(ControllerButtonEvent.Released, function () {
+    pressed_left = 0
+})
 /**
  * Check win condition and manage buttons in a continuous loop.
  * 
@@ -442,7 +508,7 @@ function show_credits () {
  * 
  * Button B must be blocked during menu, otherwise a B press during menu will be handled as undo action when the menu returns.
  */
-function next_level () {
+function next_level() {
     level += 1
     if (level > list_groupsize[levelset]) {
         level = 1
@@ -457,7 +523,7 @@ function next_level () {
 /**
  * Determine if a box is on a specific tile by comparing their absolute x and y pixel coordiates. Use pixels, because the color-coded Tile object lacks a mechanism to get its tileset coordinates.
  */
-function all_boxes_fit () {
+function all_boxes_fit() {
     for (let c of sprites.allOfKind(SpriteKind.Crate)) {
         if (!(target_tile(c.x, c.y))) {
             return 0
@@ -470,7 +536,7 @@ function all_boxes_fit () {
     }
     return 0
 }
-function undo_move () {
+function undo_move() {
     if (undo.length > 0) {
         undo_step = undo.pop()
         move_ban(undo_step[0], undo_step[1])
@@ -484,7 +550,7 @@ function undo_move () {
         update_moves()
     }
 }
-function control_level () {
+function control_level() {
     if (all_boxes_fit()) {
         pause(500)
         ban.setImage(assets.image`sokochan win`)
@@ -522,7 +588,7 @@ function control_level () {
         pressed_B = button_lag
     }
 }
-function return_to_level () {
+function return_to_level() {
     state_selection = 0
     button_lag = 9
     tiles.destroySpritesOfKind(SpriteKind.Text)
@@ -539,20 +605,25 @@ function return_to_level () {
     reset_buttons()
     state_level = 1
 }
-function scroll_level () {
+function scroll_level() {
     if (levelset == 1) {
         // Microban
-        return [8, 35, 36, 49].indexOf(level) >= 0
+        return [
+            8,
+            35,
+            36,
+            49
+        ].indexOf(level) >= 0
     }
     if (levelset == 8) {
         // Nabokosmos
         return [
-        2,
-        7,
-        11,
-        16,
-        34,
-        39
+            2,
+            7,
+            11,
+            16,
+            34,
+            39
         ].indexOf(level) >= 0
     }
     if (levelset == 5) {
@@ -561,29 +632,31 @@ function scroll_level () {
     }
     if (levelset == 4) {
         // Cantrip
-        return [4, 15, 16, 20].indexOf(level) >= 0
+        return [
+            4,
+            15,
+            16,
+            20
+        ].indexOf(level) >= 0
     }
     if (levelset == 3) {
         // Microcosmos
         return [
-        2,
-        10,
-        14,
-        22,
-        26,
-        30
+            2,
+            10,
+            14,
+            22,
+            26,
+            30
         ].indexOf(level) >= 0
     }
     return false
 }
 // Force camera to update its position right now, following the moved sprite. Otherwise, the fixed text (e.g. move counter) shuffles around, because it renders either too early, or too late.
-function update_camera () {
+function update_camera() {
     game.currentScene().camera.update()
 }
-controller.A.onEvent(ControllerButtonEvent.Released, function () {
-    pressed_A = 0
-})
-function introduce_level () {
+function introduce_level() {
     text_frame = textsprite.create("       ", 13, 13)
     text_introduction = textsprite.create("" + list_levelsets[levelset] + " " + convertToText(level), 0, 12)
     text_introduction.setMaxFontHeight(16)
@@ -596,10 +669,10 @@ function introduce_level () {
     text_introduction.destroy()
     text_frame.destroy()
 }
-controller.up.onEvent(ControllerButtonEvent.Released, function () {
-    pressed_up = 0
+controller.B.onEvent(ControllerButtonEvent.Released, function () {
+    pressed_B = 0
 })
-function move_ban (to_tx: number, to_ty: number) {
+function move_ban(to_tx: number, to_ty: number) {
     tiles.placeOnTile(ban, tiles.getTileLocation(to_tx, to_ty))
     if (target_tile(tiles.locationXY(tiles.getTileLocation(to_tx, to_ty), tiles.XY.x), tiles.locationXY(tiles.getTileLocation(to_tx, to_ty), tiles.XY.y))) {
         ban.setImage(assets.image`sokochan on target`)
@@ -607,31 +680,31 @@ function move_ban (to_tx: number, to_ty: number) {
         ban.setImage(assets.image`sokochan`)
     }
 }
-function get_level_asset_sokogen (lv: number) {
+function get_level_asset_sokogen(lv: number) {
     return [
-    assets.image`level sokogen 01`,
-    assets.image`level sokogen 02`,
-    assets.image`level sokogen 03`,
-    assets.image`level sokogen 04`,
-    assets.image`level sokogen 05`,
-    assets.image`level sokogen 06`,
-    assets.image`level sokogen 07`,
-    assets.image`level sokogen 08`,
-    assets.image`level sokogen 09`,
-    assets.image`level sokogen 10`,
-    assets.image`level sokogen 11`,
-    assets.image`level sokogen 12`,
-    assets.image`level sokogen 13`,
-    assets.image`level sokogen 14`,
-    assets.image`level sokogen 15`,
-    assets.image`level sokogen 16`,
-    assets.image`level sokogen 17`,
-    assets.image`level sokogen 18`,
-    assets.image`level sokogen 19`,
-    assets.image`level sokogen 20`
+        assets.image`level sokogen 01`,
+        assets.image`level sokogen 02`,
+        assets.image`level sokogen 03`,
+        assets.image`level sokogen 04`,
+        assets.image`level sokogen 05`,
+        assets.image`level sokogen 06`,
+        assets.image`level sokogen 07`,
+        assets.image`level sokogen 08`,
+        assets.image`level sokogen 09`,
+        assets.image`level sokogen 10`,
+        assets.image`level sokogen 11`,
+        assets.image`level sokogen 12`,
+        assets.image`level sokogen 13`,
+        assets.image`level sokogen 14`,
+        assets.image`level sokogen 15`,
+        assets.image`level sokogen 16`,
+        assets.image`level sokogen 17`,
+        assets.image`level sokogen 18`,
+        assets.image`level sokogen 19`,
+        assets.image`level sokogen 20`
     ][lv - 1]
 }
-function box_on_tile (tx: number, ty: number) {
+function box_on_tile(tx: number, ty: number) {
     for (let c of sprites.allOfKind(SpriteKind.Crate)) {
         if (tiles.locationXY(tiles.locationOfSprite(c), tiles.XY.column) == tx) {
             if (tiles.locationXY(tiles.locationOfSprite(c), tiles.XY.row) == ty) {
@@ -678,10 +751,10 @@ function box_on_tile (tx: number, ty: number) {
  * 
  * - a way to handle large levels without scrolling, maybe through smaller 8x8 sprite tilemaps
  */
-function screen_center_x () {
+function screen_center_x() {
     return tiles.tilemapColumns() * tiles.tileWidth() / 2
 }
-function get_level_asset_microban (lv: number) {
+function get_level_asset_microban(lv: number) {
     if (lv == 1) {
         return assets.image`level microban 01`
     } else if (lv == 2) {
@@ -789,10 +862,10 @@ function get_level_asset_microban (lv: number) {
     }
     return assets.image`level microban 01`
 }
-controller.B.onEvent(ControllerButtonEvent.Released, function () {
-    pressed_B = 0
+controller.right.onEvent(ControllerButtonEvent.Released, function () {
+    pressed_right = 0
 })
-function get_level_asset (group: number, lv: number) {
+function get_level_asset(group: number, lv: number) {
     if (group == 1) {
         return get_level_asset_microban(lv)
     } else if (group == 2) {
@@ -815,7 +888,7 @@ function get_level_asset (group: number, lv: number) {
         return get_level_asset_tutorial(lv)
     }
 }
-function move_box (from_tx: number, from_ty: number, to_tx: number, to_ty: number) {
+function move_box(from_tx: number, from_ty: number, to_tx: number, to_ty: number) {
     for (let c of sprites.allOfKind(SpriteKind.Crate)) {
         if (c.x == tiles.locationXY(tiles.getTileLocation(from_tx, from_ty), tiles.XY.x) && c.y == tiles.locationXY(tiles.getTileLocation(from_tx, from_ty), tiles.XY.y)) {
             tiles.placeOnTile(c, tiles.getTileLocation(to_tx, to_ty))
@@ -830,10 +903,10 @@ function move_box (from_tx: number, from_ty: number, to_tx: number, to_ty: numbe
         }
     }
 }
-function screen_center_y () {
+function screen_center_y() {
     return tiles.tilemapRows() * tiles.tileWidth() / 2
 }
-function control_selection () {
+function control_selection() {
     if (controller.up.isPressed() && !(pressed_up)) {
         menu_selection += -1
         menu_selection = (menu_selection + 4) % 4
@@ -903,7 +976,7 @@ function control_selection () {
         return_to_level()
     }
 }
-function decay_button_lag () {
+function decay_button_lag() {
     if (pressed_up) {
         pressed_up += -1
     }
@@ -923,7 +996,7 @@ function decay_button_lag () {
         pressed_B += -1
     }
 }
-function get_level_asset_murase (lv: number) {
+function get_level_asset_murase(lv: number) {
     if (lv == 1) {
         return assets.image`level murase 01`
     } else if (lv == 2) {
@@ -984,7 +1057,7 @@ function get_level_asset_murase (lv: number) {
  * 
  * 13 tan       -- floor
  */
-function realize_tilemap () {
+function realize_tilemap() {
     for (let e of scene.getTilesByType(2)) {
         box = sprites.create(list_skin_sprites[2], SpriteKind.Crate)
         scene.place(e, box)
@@ -1025,7 +1098,7 @@ function realize_tilemap () {
  * 
  * c, t, x, y
  */
-function introduce_game () {
+function introduce_game() {
     scene.setTileMap(assets.image`game intro`)
     set_level_skin(true)
     realize_tilemap()
@@ -1048,7 +1121,7 @@ function introduce_game () {
     text_introduction.destroy()
     text_frame.destroy()
 }
-function get_level_asset_nabo (lv: number) {
+function get_level_asset_nabo(lv: number) {
     if (lv == 1) {
         return assets.image`level nabo 01`
     } else if (lv == 2) {
@@ -1132,7 +1205,7 @@ function get_level_asset_nabo (lv: number) {
     }
     return assets.image`level nabo 01`
 }
-function get_level_asset_tutorial (lv: number) {
+function get_level_asset_tutorial(lv: number) {
     if (lv == 1) {
         return assets.image`level easy 01`
     } else if (lv == 2) {
@@ -1156,7 +1229,7 @@ function get_level_asset_tutorial (lv: number) {
     }
     return assets.image`level easy 01`
 }
-function target_tile (x: number, y: number) {
+function target_tile(x: number, y: number) {
     for (let t of scene.getTilesByType(3)) {
         if (x == t.x) {
             if (y == t.y) {
@@ -1206,32 +1279,34 @@ let list_groupsize: number[] = []
 let list_levelsets: string[] = []
 introduce_game()
 list_levelsets = [
-"Tutorial",
-"Microban",
-"Blocks+co",
-"Microcosm",
-"Cantrip",
-"Takaken",
-"Sokogen",
-"Murase",
-"Nabokosmos",
-"Petitesse"
+    "Tutorial",
+    "Microban",
+    "Blocks+co",
+    "Microcosm",
+    "Cantrip",
+    "Takaken",
+    "Sokogen",
+    "Murase",
+    "Nabokosmos",
+    "Petitesse"
 ]
 list_groupsize = [
-10,
-52,
-20,
-40,
-20,
-7,
-20,
-20,
-40,
-18
+    10,
+    52,
+    20,
+    40,
+    20,
+    7,
+    20,
+    20,
+    40,
+    18
 ]
 levelset = 0
 level = 1
-if (blockSettings.exists("recent group") && blockSettings.exists("recent level")) {
+let readSettings = blockSettings.readNumberArray("recent group")
+let readSettings2 = blockSettings.readNumberArray("recent level")
+if ((readSettings != undefined) && (readSettings2 != undefined)) {
     levelset = blockSettings.readNumber("recent group")
     level = blockSettings.readNumber("recent level")
 }
